@@ -1,0 +1,29 @@
+body{
+    margin: 0;
+}
+.all-spark{
+    display: flex;
+    height: 100%;
+    align-items:center;
+    justify-content:center;
+    background-color: chocolate;
+}
+#board-container{
+    padding:2%;
+    padding-bottom: 3%;
+    border: 3px solid black;
+    width: 50%;
+    height: 60%;
+    box-sizing: border-box;
+   
+}
+
+.cards{
+    border:1px solid black;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-top: 0.5%;
+    
+
+
+}
