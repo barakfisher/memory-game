@@ -24,7 +24,7 @@ function boardBuild() {
         var card = document.createElement("div");
         card.classList.add("cards");
         card.setAttribute("location", imagesArr[i]);
-        card.setAttribute("isFlipped", "no");/////////////
+        // card.setAttribute("isFlipped", "no");/////////////
         // card.setAttribute("flipNum","0"]);/////////////
         card.setAttribute("id", "card" + i);
         card.style.width = 100 / Math.sqrt(board.amountOfCards) + "%";
@@ -40,6 +40,12 @@ function flip(event) {
     var theBoard = document.getElementById("board-container");
     // if (card.getAttribute("isFlipped") == no) {/////////////////
     // card.setAttribute("isFlipped","yes");
+    if( card == null){/////////////////////////////////////////////////////////////////////////////why is the second click NULL?????????????????????/
+        // debugger;
+        return;
+    }
+    // debugger;
+
     if (board.currentFlippedCards != 2 && (event.target != board.flippedCardsArr[0] || event.target != board.flippedCardsArr[0])) {
         // debugger;
         board.currentFlippedCards++;
@@ -50,16 +56,17 @@ function flip(event) {
         // wait for 2 seconds and than
     }
     else if (board.currentFlippedCards == 2) {
-        if (board.flippedCardsArr[0].getAttribute("location") != board.flippedCardsArr[1].getAttribute("location")) {
-            board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-            board.flippedCardsArr[1].removeChild(board.flippedCardsArr[1].getElementsByTagName('img')[0]);
-        }
-         else {
-            board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-            board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-             }
-            
+        checkIfSame(board.flippedCardsArr[0],board.flippedCardsArr[1]);
+        // if (board.flippedCardsArr[0].getAttribute("location") != board.flippedCardsArr[1].getAttribute("location")) {
+        //     board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
+        //     board.flippedCardsArr[1].removeChild(board.flippedCardsArr[1].getElementsByTagName('img')[0]);
         // }
+        // else {
+        //     // board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
+        //     // board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
+        // }
+
+        // // }
         emptyArray(board.flippedCardsArr);
         board.currentFlippedCards = 0;
     }
@@ -71,18 +78,22 @@ function emptyArray(arr) {
     for (var i = 0; i < arr.length; i++) {
         delete arr[i];
     }
-    // function checkIfSame(card1, card2){
-    //     if(card1.getAttribute(location) == card2.getAttribute(location)){
-
-    //     }
-    //     if(card1.getAttribute("location") != card2.getAttribute("location")){
-    //         card1.removeChild(card1.getElementsByTagName("img")[0]);
-    //         card2.removeChild(card2.getElementsByTagName("img")[0]);
-    //     }
-
-    // }
-
 }
+
+function checkIfSame(card1, card2) {
+    // debugger;
+    if (card1.getAttribute("location") == card2.getAttribute("location")) {
+        // card1.setAttribute("isFlipped","yes");
+        card1.removeEventListener("click", flip);
+        card2.removeEventListener("click", flip)
+    }
+    else {
+        card1.removeChild(card1.getElementsByTagName("img")[0]);
+        card2.removeChild(card2.getElementsByTagName("img")[0]);
+    }
+}
+
+
 
 
 function getImageArr() {
