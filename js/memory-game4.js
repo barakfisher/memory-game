@@ -1,4 +1,8 @@
-
+// TO DO LIST:
+// clickind twice on the same card => (ERROR) => disappear
+// winning modal
+// top menu
+// if possiable add some of the functions to the user/the board
 
 board = {
     width: "",
@@ -8,14 +12,14 @@ board = {
     deck: "first",
     currentFlippedCards: 0,
     flippedCardsArr: [],
-
-
+    waiting: false
 }
 
 player = {
     name: "",
     score: "",
-    time: ""
+    time: "",
+    rightGuesses: 0 
 }
 
 function boardBuild() {
@@ -25,65 +29,44 @@ function boardBuild() {
         var card = document.createElement("div");
         card.classList.add("cards");
         card.setAttribute("location", imagesArr[i]);
-        // card.setAttribute("isFlipped", "no");/////////////
-        // card.setAttribute("flipNum","0"]);/////////////
         card.style.width = 100 / Math.sqrt(board.amountOfCards) + "%";
         card.style.height = 100 / Math.sqrt(board.amountOfCards) + "%";
-        // card.style.backgroundImage = "url("+imagesArr[i]+")";
         card.addEventListener("click", flip);
         theBoard.appendChild(card);
     }
 }
 
 function flip(event) {
-    var card = event.target;
-    card.classList.add("flipped");
-    var theBoard = document.getElementById("board-container");
-    // if (card.getAttribute("isFlipped") == no) {/////////////////
-    // card.setAttribute("isFlipped","yes");
-    // debugger;
-    if (board.flippedCardsArr[0]) {
-        // debugger;
-        if (card.classList.value == board.flippedCardsArr[0].classList.value) {/////////////////////////////////////////////////////////////////////////////why is the second click NULL?????????????????????/
-            // debugger;
-            return;
+    if (!board.waiting) {
+        var card = event.target;
+        var theBoard = document.getElementById("board-container");
+        if (board.flippedCardsArr[0]) {
+            if (card.classList.value == board.flippedCardsArr[0].classList.value) {/////////////////////////////////////////
+                return;
+            }
         }
-    }
-    // debugger;
-    // board.currentFlippedCards++;////////////////////////////////////////////////////////
-    if (event.target != board.flippedCardsArr[0] || event.target != board.flippedCardsArr[0]) {
-        // debugger;
+
+        // if (event.target != board.flippedCardsArr[0]) {//////////////////////////////////////////////////////////try without
+        card.classList.add("flipped");
         board.currentFlippedCards++;
         var pic = document.createElement("img");
         pic.setAttribute("src", card.getAttribute("location"));
         card.appendChild(pic);
         board.flippedCardsArr.unshift(card);
-        // wait for 2 seconds and than
 
         if (board.currentFlippedCards == 2) {
-            // debugger;
-            // setTimeout(() =>{
+            board.waiting = true;
             checkIfSame(board.flippedCardsArr[0], board.flippedCardsArr[1]);
             emptyArray(board.flippedCardsArr);
             board.currentFlippedCards = 0;
-            // },3000);
-
-            // debugger;
-            // if (board.flippedCardsArr[0].getAttribute("location") != board.flippedCardsArr[1].getAttribute("location")) {
-            //     board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-            //     board.flippedCardsArr[1].removeChild(board.flippedCardsArr[1].getElementsByTagName('img')[0]);
-            // }
-            // else {
-            //     // board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-            //     // board.flippedCardsArr[0].removeChild(board.flippedCardsArr[0].getElementsByTagName('img')[0]);
-            // }
-
-            // // }
-
         }
     }
+    // if(player.rightGuesses == board.amountOfCards/2 ){
+    //     // zeroAll();
+    //     debugger;
+    //     document.getElementById("victory").style.display = block;
 
-    // }/////////////////////
+    // }
 }
 function emptyArray(arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -92,26 +75,33 @@ function emptyArray(arr) {
 }
 
 function checkIfSame(card1, card2) {
-    // debugger;
-    if (card1.getAttribute("location") == card2.getAttribute("location")) {
-        // card1.setAttribute("isFlipped","yes");
-        card1.removeEventListener("click", flip);
-        card2.removeEventListener("click", flip)
-    }
-    else {
-        card1.removeChild(card1.getElementsByTagName("img")[0]);
-        card2.removeChild(card2.getElementsByTagName("img")[0]);
-    }
+    setTimeout(() => {
+        if (card1.getAttribute("location") == card2.getAttribute("location")) {
+            card1.removeEventListener("click", flip);
+            card2.removeEventListener("click", flip)
+            player.rightGuesses ++;
+            
+            if(player.rightGuesses == board.amountOfCards/2 ){
+                // zeroAll();
+                debugger;
+                document.getElementById("victory").style.display = "block"; 
+        
+            }
+        }
+        else {
+            card1.classList.remove("flipped");
+            card2.classList.remove("flipped");
+            card1.removeChild(card1.getElementsByTagName("img")[0]);
+            card2.removeChild(card2.getElementsByTagName("img")[0]);
+        }
+        board.waiting = false;
+    }, 500);
 }
-
-
-
 
 function getImageArr() {
     var imageArr = shuffleArr(getNumbersArr());
     for (var i = 0; i < board.amountOfCards; i++) {
         imageArr[i] = "./images/" + board.deck + "/" + imageArr[i] + ".png";
-
     }
     return imageArr;
 }
@@ -123,9 +113,9 @@ function getSelectedLevel() {
     board.level = document.getElementById("selectLevel").value;
     board.amountOfCards = getItemNumber(document.getElementById("selectLevel").value);
     boardBuild();
+    
 }
 document.getElementById("selectLevel").addEventListener("change", getSelectedLevel);
-
 
 function getItemNumber(str) {
     len = str.length;
@@ -160,4 +150,3 @@ function getNumbersArr() {
     }
     return numbersArr.concat(numbersArr);
 }
-

@@ -4,6 +4,7 @@ body{
 .all-spark{
     display: flex;
     height: 100%;
+    flex-direction: column;
     align-items:center;
     justify-content:center;
     background-color: chocolate;
@@ -29,6 +30,23 @@ body{
     background: rgba(1,1,1,0);
 }
 
+.flipped{
+    border:1px solid red;
+    /*design when card is picked */
+}
+.my-modal{
+    display:block;;
+    background: rgba(0,0,0,0.7);
+    position:fixed;
+    width:60%;
+    height: 70%;
+}
+#victory{
+    display:none;
+}
+#modal-menu{
+    display:block;
+}
 .cards img{
     width:100%;
     height: 100%;
