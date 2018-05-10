@@ -7,26 +7,22 @@
 <body>
 
     <div class="all-spark">
-            <select id="selectLevel">
-                    <option selected disabled>Choose Level</option>
-                    <option value="easy-16">easy</option>
-                    <option value="normal-25">normal</option>
-                    <option value="hard-36">hard</option>
-                </select>
+        <div class="top-menu">
+            <select class ="button-style clickable" id="selectLevel">
+                <option selected disabled>Choose Level</option>
+                <option value="easy-16">easy</option>
+                <option value="normal-25">normal</option>
+                <option value="hard-36">hard</option>
+            </select>
+        </div>
+
         <div id="board-container">
         </div>
         <div class="my-modal" id="victory">
-               
+            <div class="exit-modal"> 
+                <img class="exit-img clickable" src="./images/X..2png" alt="exit">
+            </div>
         </div>
-        <!-- <div class="my-modal" id="modal-menu">
-                <select id="selectLevel">
-                        <option selected disabled>Choose Level</option>
-                        <option value="easy-16">easy</option>
-                        <option value="normal-25">normal</option>
-                        <option value="hard-36">hard</option>
-                    </select>
-        </div> -->
-        
     </div>
 
     <script src="./js/memory-game4.js"> </script>
