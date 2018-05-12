@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <link href="./css/memory-game.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <div class="all-spark center-col">
+        <div class="center-col top-menu">
+            <input type="button" value="NEW GAME" class="button-style clickable">
+        </div>
+
+        <div id="board-container">
+        </div>
+
+        <div class="center-col my-modal" id="menu-modal">
+            <div class="exit-modal">
+                <img class="exit-img clickable" src="./images/x.png" alt="exit">
+            </div>
+            <div id="victory" class="center-col">
+                <h1> Victory </h1>
+                <p> Number of guesses:  </p>
+                <h2 id="guesses"></h2> 
+            </div>
+            <div class="center-col">
+                <h1>Choose Level To Play:</h1>
+                <div class="my-level clickable easy-9" > Easy</div> 
+                <div class="my-level clickable easy-16">Normal</div>
+                <div class="my-level clickable easy-25">Hard</div>
+            </div>
+        </div>
+
+    </div>
+    <script src="./js/memory-game4.js"> </script>
+</body>
+
+</html>

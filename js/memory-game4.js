@@ -1,12 +1,4 @@
-// TO DO LIST:
-// clickind twice on the same card => (ERROR) => disappear
-// winning modal
-// top menu
-// if possiable add some of the functions to the user/the board
-
 board = {
-    width: "",
-    height: "",
     level: "",
     amountOfCards: 0,
     deck: "first",
@@ -16,24 +8,37 @@ board = {
 }
 
 player = {
-    name: "",
     score: "",
-    time: "",
-    rightGuesses: 0 
+    guesses: 0,
+    rightGuesses: 0
+}
+
+function zeroAll(){
+    player.rightGuesses =0;
+    player.guesses=0;
 }
 
 function boardBuild() {
+    zeroAll();
     var theBoard = document.getElementById("board-container");
-    imagesArr = getImageArr(); // will return an array filled with images reffs (index 0 is 1)
+    imagesArr = getImageArr(); 
     for (var i = 0; i < board.amountOfCards; i++) {
         var card = document.createElement("div");
-        card.classList.add("cards","clickable");
-        card.setAttribute("location", imagesArr[i]);
         card.style.width = 100 / Math.sqrt(board.amountOfCards) + "%";
         card.style.height = 100 / Math.sqrt(board.amountOfCards) + "%";
+        card.classList.add("cards", "clickable");
+        card.setAttribute("location", imagesArr[i]);
+        card.style.backgroundImage = "url('./images/tree-background.png')";
         card.addEventListener("click", flip);
-        theBoard.appendChild(card);
+        theBoard.appendChild(card);   
+        if (board.amountOfCards % 2 != 0 && i == board.amountOfCards-1) {
+            card.style.opacity = "0";
+            card.removeEventListener("click", flip);
+            card.classList.remove("clickable");
+        }
+     
     }
+    document.getElementById("menu-modal").style.display = "none";
     document.getElementById("victory").style.display = "none";
 }
 
@@ -42,12 +47,10 @@ function flip(event) {
         var card = event.target;
         var theBoard = document.getElementById("board-container");
         if (board.flippedCardsArr[0]) {
-            if (card.classList.value == board.flippedCardsArr[0].classList.value) {/////////////////////////////////////////
+            if (card.classList.value == board.flippedCardsArr[0].classList.value) {
                 return;
             }
         }
-
-        // if (event.target != board.flippedCardsArr[0]) {//////////////////////////////////////////////////////////try without
         card.classList.add("flipped");
         board.currentFlippedCards++;
         var pic = document.createElement("img");
@@ -63,6 +66,7 @@ function flip(event) {
         }
     }
 }
+
 function emptyArray(arr) {
     for (var i = 0; i < arr.length; i++) {
         delete arr[i];
@@ -70,17 +74,16 @@ function emptyArray(arr) {
 }
 
 function checkIfSame(card1, card2) {
+    player.guesses++;
     setTimeout(() => {
         if (card1.getAttribute("location") == card2.getAttribute("location")) {
             card1.removeEventListener("click", flip);
             card2.removeEventListener("click", flip)
-            player.rightGuesses ++;
-            
-            if(player.rightGuesses == board.amountOfCards/2 ){
-                // zeroAll();
-                debugger;
-                document.getElementById("victory").style.display = "block"; 
-        
+            player.rightGuesses++;
+            if (player.rightGuesses == Math.floor(board.amountOfCards / 2)) {
+                document.getElementById("menu-modal").style.display = "block";
+                document.getElementById("victory").style.display = "flex";
+                document.getElementById("guesses").innerHTML = player.guesses;
             }
         }
         else {
@@ -105,15 +108,10 @@ function getSelectedLevel() {
     if (board.amountOfCards != 0) {
         clearBoard();
     }
-    board.level = document.getElementById("selectLevel").value;
-    board.amountOfCards = getItemNumber(document.getElementById("selectLevel").value);
+    board.level = this.classList[this.classList.lenght-1];
+    board.amountOfCards = getItemNumber(this.classList[this.classList.length-1]);
     boardBuild();
 }
-document.getElementById("selectLevel").addEventListener("change", getSelectedLevel);
-document.getElementsByClassName("exit-img")[0].addEventListener("click", function(){
-    document.getElementById("victory").style.display ="none";
-});
-
 
 function getItemNumber(str) {
     len = str.length;
@@ -122,12 +120,15 @@ function getItemNumber(str) {
     }
     return parseInt(str[len - 1]);
 }
+
 function clearBoard() {
     var theBoard = document.getElementById("board-container");
     var cardsArr = document.getElementsByClassName("cards");
     for (var i = 0; i < board.amountOfCards; i++) {
         theBoard.removeChild(cardsArr[0]);
     }
+    board.amountOfCards = 0;
+    document.getElementById("menu-modal").style.display = "block";
 }
 
 function shuffleArr(array) {
@@ -144,54 +145,22 @@ function shuffleArr(array) {
 function getNumbersArr() {
     var numbersArr = [""];
     for (var i = 0; i < board.amountOfCards / 2; i++) {
+        if (board.amountOfCards % 2 != 0 && i == Math.floor(board.amountOfCards/2)){
+            return numbersArr.concat(numbersArr); 
+        }
         numbersArr[i] = i + 1;
     }
-    return numbersArr.concat(numbersArr);
+ 
+        return numbersArr.concat(numbersArr);
 }
 
+document.getElementsByClassName("exit-img")[0].addEventListener("click", function () {
+    document.getElementById("menu-modal").style.display = "none";
+    document.getElementById("victory").style.display = "none";
+});
+document.getElementsByClassName("button-style")[0].addEventListener("click", clearBoard);
 
-
-stopWatch = {
-            seconds: 0,
-            minutes: 0,
-            cond: true,
-            status: true
-        }
-        document.getElementById("start").addEventListener("click", toStart);
-        document.getElementById("stop").addEventListener("click", toZero);
-
-
-        function secondsCount() {
-            function test() {
-                if (stopWatch.cond == true) {
-                    if (stopWatch.seconds == 59) {
-                        stopWatch.seconds = 0;
-                        stopWatch.minutes++;
-                    }
-                    if (stopWatch.minutes == 59) {
-                        stopWatch.minutes = 0;
-                    }
-                    stopWatch.seconds++;
-                    document.getElementById("dateId").innerHTML =  stopWatch.minutes+ ":" + stopWatch.seconds;
-                } else {
-                    clearInterval(x);
-                }
-            }
-               var x= setInterval(test, 1000);
-        }
-
-        function toZero() {
-            stopWatch.seconds = 0;
-            stopWatch.minutes = 0;
-            stopWatch.cond = false;
-            stopWatch.status = true;
-            secondsCount();
-        }
-        function toStart() {
-            if(stopWatch.status===true){
-                stopWatch.status = false;
-                stopWatch.cond = true;
-                secondsCount();
-            }
-        }
-
+var levels = document.getElementsByClassName("my-level");
+for (var i = 0; i < levels.length; i++) {
+    levels[i].addEventListener("click", getSelectedLevel);
+}
